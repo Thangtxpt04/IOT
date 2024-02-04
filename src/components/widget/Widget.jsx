@@ -1,32 +1,61 @@
 import "./widget.scss";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AcUnitIcon from '@mui/icons-material/AcUnit';
+import AcUnitIcon from "@mui/icons-material/AcUnit";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import WaterDropIcon from '@mui/icons-material/WaterDrop';
-import LightModeIcon from '@mui/icons-material/LightMode';
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { useEffect } from "react";
+import { useState } from "react";
 
+const getColorGradient = (parameter, color1, color2) => {
+  // Chuyển đổi giá trị parameter thành phần trăm để tính toán màu
+  const percent = (parameter - 1) / 99; // Giả sử parameter nằm trong khoảng từ 1 đến 100
+  const r = Math.floor(color1[0] + percent * (color2[0] - color1[0]));
+  const g = Math.floor(color1[1] + percent * (color2[1] - color1[1]));
+  const b = Math.floor(color1[2] + percent * (color2[2] - color1[2]));
+  return `rgb(${r},${g},${b})`;
+};
 const Widget = ({ type }) => {
   let data;
 
   //temporary
   const amount = 37;
-  const diff = 20;
+  const [randomNumber, setRandomNumber] = useState(getRandomNumber);
 
+  function getRandomNumber() {
+    // Sinh số nguyên ngẫu nhiên từ 1 đến 100
+    return Math.floor(Math.random() * 50) + 1;
+  }
+
+  useEffect(() => {
+    // Cập nhật số ngẫu nhiên sau mỗi 3 giây
+    const intervalId = setInterval(() => {
+      setRandomNumber(getRandomNumber());
+    }, 3000);
+
+    // Xóa interval khi component bị unmount
+    return () => clearInterval(intervalId);
+  }, []); // [] đ
   switch (type) {
     case "temperature":
       data = {
+        parameter: randomNumber,
         title: "Nhiệt độ",
-        isMoney: false,
+        keyName: "temperature",
         link: "See all users",
+        background: `#FFE53B linear-gradient(147deg, #FFE53B ${
+          50 - randomNumber
+        }%, #FF2525 74%)`,
+
         icon: (
           <AcUnitIcon
             className="icon"
             style={{
               color: "crimson",
-              backgroundColor: "rgba(255, 0, 0, 0.2)",
+              background: `#FFE53B linear-gradient(147deg, #FFE53B 0%, #FF2525 74%)`,
             }}
           />
         ),
@@ -34,14 +63,25 @@ const Widget = ({ type }) => {
       break;
     case "humidity":
       data = {
+        parameter: randomNumber,
         title: "Độ ẩm",
-        isMoney: false,
+        keyName: "humidity",
+
+        background: `#0093E9 linear-gradient(160deg, #0093E9 ${randomNumber}%, #80D0C7 80%)`,
+
+        backgroundColor: getColorGradient(
+          randomNumber,
+          [0, 128, 0],
+          [0, 255, 0]
+        ),
         icon: (
           <WaterDropIcon
             className="icon"
             style={{
-              backgroundColor: "rgba(218, 165, 32, 0.2)",
-              color: "goldenrod",
+              background:
+                "#0093E9 linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
+
+              color: "#0093E9",
             }}
           />
         ),
@@ -49,37 +89,41 @@ const Widget = ({ type }) => {
       break;
     case "lux":
       data = {
+        parameter: randomNumber,
         title: "Ánh sáng",
-        isMoney: true,
+        keyName: "lux",
         link: "View net earnings",
+
+        background: ` linear-gradient( 135deg, #FDEB71 ${randomNumber}%, #F8D800 100%)`,
+
         icon: (
           <LightModeIcon
             className="icon"
-            style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
+            style={{
+              background: `linear-gradient( 135deg, #FDEB71 10%, #F8D800 100%)`,
+              color: "#FDEB71",
+            }}
           />
         ),
       };
       break;
-   
     default:
+      // Handle default case
       break;
   }
 
   return (
-    <div className="widget">
+    <div className={`widget`} style={{ background: `${data.background}` }}>
       <div className="left">
         <span className="title">{data?.title}</span>
         <span className="counter">
-          {data?.isMoney && "$"} {amount}
+          {data.parameter}
+          {data?.keyName == "temperature" && "°C"}
+          {data?.keyName == "humidity" && "%"}
+          {data?.keyName == "lux" && " lux"}
         </span>
       </div>
-      <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
-        {data?.icon}
-      </div>
+      <div className="right">{data?.icon}</div>
     </div>
   );
 };

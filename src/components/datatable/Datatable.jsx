@@ -1,11 +1,27 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { userColumns, userRows } from "../../datatablesource";
+import {
+  dataHistoryColumns,
+  dataHistoryRows,
+  dataSensorColumns,
+  dataSensorRows,
+} from "../../datatablesource";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Datatable = () => {
-  const [data, setData] = useState(userRows);
+const Datatable = ({ dataTable }) => {
+  console.log(dataTable);
+  const [data, setData] = useState(dataHistoryRows);
+
+  const [columns, setColumns] = useState(dataHistoryColumns);
+
+  useEffect(() => {
+    if (dataTable === "isDataSensor") {
+      setData(dataSensorRows);
+      setColumns(dataSensorColumns);
+    } else {
+    }
+  }, []);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -33,22 +49,26 @@ const Datatable = () => {
       },
     },
   ];
+
   return (
     <div className="datatable">
-      <div className="datatableTitle">
-        Add New User
-        <Link to="/users/new" className="link">
-          Add New
-        </Link>
-      </div>
-      <DataGrid
-        className="datagrid"
-        rows={data}
-        columns={userColumns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        checkboxSelection
-      />
+      {dataTable == "isDataSensor" ? (
+        <DataGrid
+          className="datagrid"
+          rows={dataSensorRows}
+          columns={dataSensorColumns}
+          pageSize={9}
+          rowsPerPageOptions={[9]}
+        />
+      ) : (
+        <DataGrid
+          className="datagrid"
+          rows={dataHistoryRows}
+          columns={dataHistoryColumns}
+          pageSize={9}
+          rowsPerPageOptions={[9]}
+        />
+      )}
     </div>
   );
 };

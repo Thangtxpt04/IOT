@@ -8,6 +8,8 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -19,29 +21,38 @@ const Sidebar = () => {
         </Link>
       </div>
       <hr />
-      <div className="center">
+      {/* <div className="center">
         <ul>
           <p className="title">MAIN</p>
           <li>
             <DashboardIcon className="icon" />
             <Link to="/" style={{ textDecoration: "none" }}>
-            <span>Dashboard</span>
-
+              <span>Dashboard</span>
             </Link>
           </li>
-          <Link to="/users" style={{ textDecoration: "none" }}>
+          <Link to="/data-sensor" style={{ textDecoration: "none" }}>
             <li>
-              <PersonOutlineIcon className="icon" />
-              <span>Users</span>
+              <FontAwesomeIcon icon={faDatabase} style={{ color: "#7451f8" }} />
+              <span>Data sensor</span>
             </li>
           </Link>
-        
-        
-          <li>
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
-         
+
+          <Link to="/action-history" style={{ textDecoration: "none" }}>
+            <li>
+              <FontAwesomeIcon
+                icon={faChartSimple}
+                style={{ color: "#7451f8" }}
+              />
+              <span>Action history</span>
+            </li>
+          </Link>
+
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+            <li>
+              <AccountCircleOutlinedIcon className="icon" />
+              <span>Profile</span>
+            </li>
+          </Link>
         </ul>
       </div>
       <div className="bottom">
@@ -53,7 +64,7 @@ const Sidebar = () => {
           className="colorOption"
           onClick={() => dispatch({ type: "DARK" })}
         ></div>
-      </div>
+      </div> */}
     </div>
   );
 };

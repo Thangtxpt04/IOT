@@ -6,7 +6,7 @@
   -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
   border-radius: 10px;
-  height: 100px;
+  height: 120px;
 
   .left,
   .right {
@@ -17,7 +17,7 @@
     .title {
       font-weight: bold;
       font-size: 14px;
-      color: rgb(160, 160, 160);
+      color: rgb(42, 36, 36);
     }
 
     .counter {
@@ -51,4 +51,18 @@
       align-self: flex-end;
     }
   }
+}
+.widget.temperatureColor {
+  background-color: rgb(237, 193, 104);
+}
+.widget.humidityColor {
+  background-color: rgb(106, 199, 227);
+}
+
+.widget.luxColor {
+  background-color: rgb(247, 247, 80);
+}
+.device {
+  width: 150px;
+  height: 150px;
 }

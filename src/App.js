@@ -8,9 +8,12 @@ import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
+  const isDataSensor = "isDataSensor";
+  const isHistoryAction = "isHistoryAction";
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
@@ -19,8 +22,24 @@ function App() {
           <Route path="/">
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
-            <Route path="users">
-              <Route index element={<List />} />
+            <Route path="data-sensor">
+              <Route index element={<List data={isDataSensor} />} />
+              <Route path=":userId" element={<Single />} />
+              <Route
+                path="new"
+                element={<New inputs={userInputs} title="Add New User" />}
+              />
+            </Route>
+            <Route path="action-history">
+              <Route index element={<List data={isHistoryAction} />} />
+              <Route path=":userId" element={<Single />} />
+              <Route
+                path="new"
+                element={<New inputs={userInputs} title="Add New User" />}
+              />
+            </Route>
+            <Route path="profile">
+              <Route index element={<Profile />} />
               <Route path=":userId" element={<Single />} />
               <Route
                 path="new"
