@@ -1,0 +1,23 @@
+PUT http://localhost:4004/api/device/update-status
+Content-Type: application/json
+
+{
+  "deviceId": "D2",
+  "action": true
+}
+###
+POST http://localhost:4004/api/device/create
+Content-Type: application/json
+Accept: application/json
+
+{
+  "deviceId": "D1",
+  "name": "Fan",
+  "description": "Quạt"
+}
+
+###
+GET http://localhost:4004/api/device/D3
+
+###
+DELETE http://localhost:4004/api/device/action/delete?dataId=184,185

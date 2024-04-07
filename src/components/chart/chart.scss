@@ -1,15 +1,19 @@
+.wrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  margin-top: 24px;
+}
+
 .chart {
-  flex: 4;
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  padding: 10px;
-  color: gray;
+  width: 100%;
+  max-height: 95%;
+  display: flex;
+}
 
-  .title {
-    margin-bottom: 20px;
-  }
-
-  .chartGrid {
-    stroke: rgb(228, 225, 225);
-  }
+.wrapper.dark {
+  background-color: var(--bg-box-dark);
 }

@@ -1,53 +1,71 @@
-import "./chart.scss";
+import { useContext } from "react";
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
-const data = [
-  { name: "January", Total: 1200 },
-  { name: "February", Total: 2100 },
-  { name: "March", Total: 800 },
-  { name: "April", Total: 1600 },
-  { name: "May", Total: 900 },
-  { name: "June", Total: 1700 },
-];
+import "./chart.scss";
 
-const Chart = ({ aspect, title }) => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+function Chart() {
+  const labels = ["10:00:01", "10:00:02", "10:00:03", "10:00:04", "10:00:05"];
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Nhiệt độ",
+        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 134, 0.5)",
+      },
+      {
+        label: "Độ ẩm",
+        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(57, 162, 235, 0.5)",
+      },
+      {
+        label: "Ánh sáng",
+        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        borderColor: "rgb(242, 166, 84)",
+        backgroundColor: "rgba(242, 166, 82, 0.5)",
+      },
+    ],
+  };
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "MCU ESP8266",
+      },
+    },
+  };
+
   return (
-    <div className="chart">
-      <div className="title">{title}</div>
-      <ResponsiveContainer width="100%" aspect={aspect}>
-        <AreaChart
-          width={730}
-          height={250}
-          data={data}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis dataKey="name" stroke="gray" />
-          <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
-          <Tooltip />
-          <Area
-            type="monotone"
-            dataKey="Total"
-            stroke="#8884d8"
-            fillOpacity={1}
-            fill="url(#total)"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+    <div className={"wrapper"}>
+      <Line className={"chart"} data={data} />
     </div>
   );
-};
+}
 
 export default Chart;

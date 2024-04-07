@@ -18,10 +18,13 @@ const Home = () => {
           <Widget type="lux" />
         </div>
         <div className="charts">
-          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
-          <Featured />
+          <div className="chart">
+            <Chart />
+          </div>
+          <div className="devide">
+            <Featured />
+          </div>
         </div>
-       
       </div>
     </div>
   );
