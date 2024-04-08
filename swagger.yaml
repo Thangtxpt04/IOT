@@ -1,31 +1,27 @@
 openapi: 3.0.3
 info:
-  version: '1.0.0'
-  title: Iot 
-  description: |
-   
+  version: "1.0.0"
+  title: IOT DASHBOARD-TRINH XUAN THANG
 
 servers:
   - url: http://localhost:4000/api
 tags:
-  - name: device
-    description: Everything about `devices` and `action data`
-    externalDocs:
-      description: Find out more
-      url: https://mosquitto.org
   - name: sensor
-    description: Everything about `sensors` and `sensor data`
+    description: Cảm biến
+  - name: device
+    description: Thiết bị
   - name: mqtt
-    description: Everything about `mosquitto` broker
+    description: MQTT
+
 paths:
   /mqtt/status:
     get:
       tags:
         - mqtt
-      summary: Get current status of mqtt
+      summary: Lấy trạng thái hiện tại của MQTT
       responses:
-        '200':
-          description: Succeed to current status of `mqtt`
+        "200":
+          description: Lấy trạng thái hiện tại của MQTT thành công
           content:
             application/json:
               schema:
@@ -36,7 +32,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to current status of mqtt
+                    example: Lấy trạng thái hiện tại của MQTT thành công
                   data:
                     type: object
                     properties:
@@ -49,10 +45,10 @@ paths:
     get:
       tags:
         - sensor
-      summary: Get all sensors
+      summary: Lấy danh sách cảm biến
       responses:
-        '200':
-          description: Succeed to get all sensors
+        "200":
+          description: Lấy tất cả cảm biến thành công
           content:
             application/json:
               schema:
@@ -63,61 +59,21 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get all sensors
+                    example: Lấy tất cả cảm biến thành công
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Sensor'
-  /sensor/{sensorId}:
-    get:
-      tags:
-        - sensor
-      summary: Get a sensor by sensorId
-      parameters:
-        - in: path
-          name: sensorId
-          required: true
-          description: ID of the sensor to retrieve
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Succeed to get a sensor
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: Succeed to get a sensor
-                  data:
-                    $ref: '#/components/schemas/Sensor'
-        '404':
-          description: Get a sensor that doesn't exist in database.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 404
-                  message:
-                    type: string
-                    example: No sensor found.
+                      $ref: "#/components/schemas/Sensor"
+
   /sensor/create:
     post:
       tags:
         - sensor
-      summary: Create a new sensor
-      description: Create a new sensor
+      summary: Thêm mới cảm biến
+      description: Tạo một cảm biến mới
       requestBody:
         required: true
-        description: Set a new sensor
+        description: Thiết lập một cảm biến mới
         content:
           application/json:
             schema:
@@ -125,16 +81,16 @@ paths:
               properties:
                 sensorId:
                   type: string
-                  example: 'S1'
+                  example: "S1"
                 name:
                   type: string
-                  example: 'Sensor'
+                  example: "Cảm biến"
                 address:
                   type: string
-                  example: 'localhost'
+                  example: "localhost"
       responses:
-        '201':
-          description: Succeed to add sensor
+        "201":
+          description: Thêm cảm biến thành công
           content:
             application/json:
               schema:
@@ -145,11 +101,11 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Succeed to add sensor
+                    example: Thêm cảm biến thành công
                   data:
-                    $ref: '#/components/schemas/Sensor'
-        '400':
-          description: Add a sensor that already existed.
+                    $ref: "#/components/schemas/Sensor"
+        "400":
+          description: Thêm một cảm biến đã tồn tại.
           content:
             application/json:
               schema:
@@ -160,16 +116,16 @@ paths:
                     example: 400
                   message:
                     type: string
-                    example: Sensor already exists.
+                    example: Cảm biến đã tồn tại.
   /sensor/update:
     put:
       tags:
         - sensor
-      summary: Update an existing sensor
-      description: Update an existing sensor
+      summary: Cập nhật cảm biến
+      description: Cập nhật một cảm biến đã tồn tại
       requestBody:
         required: true
-        description: Update an existing sensor
+        description: Cập nhật một cảm biến đã tồn tại
         content:
           application/json:
             schema:
@@ -177,16 +133,16 @@ paths:
               properties:
                 sensorId:
                   type: string
-                  example: 'S1'
+                  example: "S1"
                 name:
                   type: string
-                  example: 'Sensor'
+                  example: "Cảm biến"
                 address:
                   type: string
-                  example: 'localhost'
+                  example: "localhost"
       responses:
-        '200':
-          description: Succeed to update sensor
+        "200":
+          description: Cập nhật cảm biến thành công
           content:
             application/json:
               schema:
@@ -197,11 +153,11 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to update sensor
+                    example: Cập nhật cảm biến thành công
                   data:
-                    $ref: '#/components/schemas/Sensor'
-        '404':
-          description: Update a sensor that doesn't exist.
+                    $ref: "#/components/schemas/Sensor"
+        "404":
+          description: Cập nhật một cảm biến không tồn tại.
           content:
             application/json:
               schema:
@@ -212,41 +168,41 @@ paths:
                     example: 404
                   message:
                     type: string
-                    example: No sensor found.
+                    example: Không tìm thấy cảm biến.
   /sensor/data:
     get:
       tags:
         - sensor
-      summary: Get data sensor.
-      description: Get data sensor by multiple criteria.
+      summary: Lấy dữ liệu của cảm biến
+      description: Lấy dữ liệu của cảm biến theo nhiều tiêu chí.
       parameters:
         - name: sensorId
           in: query
           required: false
-          description: The ID of the sensor to retrieve data for. If provided, the endpoint will return data for the sensor with this ID. If not provided, the endpoint will return data for all sensors.
+          description: ID của cảm biến để lấy dữ liệu. Nếu cung cấp, điểm cuối sẽ trả về dữ liệu cho cảm biến có ID này. Nếu không cung cấp, điểm cuối sẽ trả về dữ liệu cho tất cả các cảm biến.
           schema:
             type: string
-            default: 'S1'
+            default: "S1"
         - name: startDate
           in: query
           required: false
-          description: The start date/time for the data range. If provided, the endpoint will return data recorded after this date/time.
+          description: Ngày/giờ bắt đầu của dải dữ liệu. Nếu cung cấp, điểm cuối sẽ trả về dữ liệu được ghi sau ngày/giờ này.
           schema:
             type: string
             format: date-time
-            example: '2024-03-16 00:00:00'
+            example: "2024-03-16 00:00:00"
         - name: endDate
           in: query
           required: false
-          description: The end date/time for the data range. If provided, the endpoint will return data recorded before this date/time.
+          description: Ngày/giờ kết thúc của dải dữ liệu. Nếu cung cấp, điểm cuối sẽ trả về dữ liệu được ghi trước ngày/giờ này.
           schema:
             type: string
             format: date-time
-            example: '2024-03-17 00:00:00'
+            example: "2024-03-17 00:00:00"
         - name: orderBy
           in: query
           required: false
-          description: The field to sort the results by.
+          description: Trường để sắp xếp kết quả.
           schema:
             type: string
             enum:
@@ -257,7 +213,7 @@ paths:
         - name: direction
           in: query
           required: false
-          description: The direction of the sorting (ASC or DESC).
+          description: Hướng sắp xếp (ASC hoặc DESC).
           schema:
             type: string
             enum:
@@ -266,7 +222,7 @@ paths:
         - name: searchField
           in: query
           required: false
-          description: The field that you want to search.
+          description: Trường bạn muốn tìm kiếm.
           schema:
             type: string
             enum:
@@ -276,7 +232,7 @@ paths:
         - name: searchOperator
           in: query
           required: false
-          description: The operator of comparison.
+          description: Toán tử so sánh.
           schema:
             type: string
             enum:
@@ -287,14 +243,14 @@ paths:
         - name: searchValue
           in: query
           required: false
-          description: The value you want to search. If operator is `inRange`, you need to <mark>provide a second value</mark>, one comma after the first one (Example '`12,50`' means **from 12 to 50**')
+          description: Giá trị bạn muốn tìm kiếm. Nếu toán tử là `inRange`, bạn cần cung cấp giá trị thứ hai, một dấu phẩy sau giá trị đầu tiên (Ví dụ '`12,50`' có nghĩa là **từ 12 đến 50**')
           schema:
             type: string
-            example: '12'
+            example: "12"
         - name: page
           in: query
           required: false
-          description: The page number of the results.
+          description: Số trang của kết quả.
           schema:
             type: integer
             minimum: 1
@@ -302,14 +258,14 @@ paths:
         - name: pageSize
           in: query
           required: false
-          description: The number of results per page.
+          description: Số lượng kết quả trên mỗi trang.
           schema:
             type: integer
             minimum: 1
             default: 10
       responses:
-        '200':
-          description: Succeed to get data sensor. The response.data will be <mark>empty array</mark> if there isn't any records matching with all provided criteria.
+        "200":
+          description: Lấy dữ liệu cảm biến thành công. response.data sẽ là <mark>mảng trống</mark> nếu không có bản ghi nào khớp với tất cả các tiêu chí được cung cấp.
           content:
             application/json:
               schema:
@@ -320,7 +276,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get data sensor
+                    example: Lấy dữ liệu cảm biến thành công
                   data:
                     type: array
                     items:
@@ -342,14 +298,14 @@ paths:
                         createdAt:
                           type: string
                           format: date-time
-                          example: '2024-03-17 00:11:23'
+                          example: "2024-03-17 00:11:23"
                         updatedAt:
                           type: string
                           format: date-time
-                          example: '2024-03-17 00:11:23'
+                          example: "2024-03-17 00:11:23"
                         sensorId:
                           type: string
-                          example: 'S1'
+                          example: "S1"
                   meta:
                     type: object
                     properties:
@@ -358,49 +314,49 @@ paths:
                         properties:
                           count:
                             type: integer
-                            description: Quantity of records on current page.
+                            description: Số lượng bản ghi trên trang hiện tại.
                             example: 1
                           total:
                             type: integer
-                            description: Quantity of all records.
+                            description: Số lượng tất cả các bản ghi.
                             example: 8
                           pageSize:
                             type: integer
-                            description: Quantity of records in request.
+                            description: Số lượng bản ghi trong yêu cầu.
                             example: 1
                           currentPage:
                             type: integer
-                            description: The number of current page.
+                            description: Số trang hiện tại.
                             example: 1
                           totalPage:
                             type: integer
-                            description: Total number of pages.
+                            description: Tổng số trang.
                             example: 8
                           hasNext:
                             type: boolean
-                            description: Whether it is possible to forward pages or not.
+                            description: Có thể chuyển tiếp trang hay không.
                             example: true
                           hasPrevious:
                             type: boolean
-                            description: Whether it is possible to return to the previous page or not
+                            description: Có thể quay lại trang trước đó hay không.
                             example: false
   /sensor/data/delete:
     delete:
       tags:
         - sensor
-      summary: Delete data sensor.
-      description: Get data sensor by multiple criteria.
+      summary: Xoá dữ liệu cảm biến
+      description: Xoá dữ liệu cảm biến theo nhiều tiêu chí.
       parameters:
         - name: dataId
           in: query
           required: true
-          description: The ID of the data sensor to delete. The `dataId` are <mark>separated by **commas**, written next to each other without spaces</mark>
+          description: ID của dữ liệu cảm biến để xoá. Các `dataId` được <mark>phân tách bằng dấu phẩy, viết kế tiếp nhau mà không có khoảng trắng</mark>
           schema:
             type: string
-            example: '1,3,4,5'
+            example: "1,3,4,5"
       responses:
-        '200':
-          description: Succeed to delete data sensor. The `response.data` will be the **number** of removed records from database.
+        "200":
+          description: Xoá dữ liệu cảm biến thành công. `response.data` sẽ là **số** bản ghi đã xoá khỏi cơ sở dữ liệu.
           content:
             application/json:
               schema:
@@ -411,7 +367,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get data sensor
+                    example: Lấy dữ liệu cảm biến thành công
                   data:
                     type: integer
                     example: 1
@@ -420,10 +376,10 @@ paths:
     get:
       tags:
         - device
-      summary: Get all devices
+      summary: Lấy danh sách thiết bị
       responses:
-        '200':
-          description: Success to get all devices
+        "200":
+          description: Thành công để lấy tất cả thiết bị
           content:
             application/json:
               schema:
@@ -434,20 +390,20 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Success to get all devices
+                    example: Thành công để lấy tất cả thiết bị
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Device'
+                      $ref: "#/components/schemas/Device"
   /device/create:
     post:
       tags:
         - device
-      summary: Create a new device
-      description: Create a new device
+      summary: Thêm mới thiết bị
+      description: Tạo một thiết bị mới
       requestBody:
         required: true
-        description: Set a new device
+        description: Thiết lập một thiết bị mới
         content:
           application/json:
             schema:
@@ -455,16 +411,16 @@ paths:
               properties:
                 deviceId:
                   type: string
-                  example: 'D1'
+                  example: "D1"
                 name:
                   type: string
-                  example: 'Fan'
+                  example: "Quạt"
                 description:
                   type: string
-                  example: 'Quạt'
+                  example: "Quạt điện"
       responses:
-        '201':
-          description: Succeed to add device
+        "201":
+          description: Thêm thiết bị thành công
           content:
             application/json:
               schema:
@@ -475,11 +431,11 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Succeed to add device
+                    example: Thêm thiết bị thành công
                   data:
-                    $ref: '#/components/schemas/Device'
-        '400':
-          description: Add a device that already existed.
+                    $ref: "#/components/schemas/Device"
+        "400":
+          description: Thêm một thiết bị đã tồn tại.
           content:
             application/json:
               schema:
@@ -490,22 +446,22 @@ paths:
                     example: 400
                   message:
                     type: string
-                    example: Device already exists.
+                    example: Thiết bị đã tồn tại.
   /device/{deviceId}:
     get:
       tags:
         - device
-      summary: Get device by deviceId
+      summary: Xem chi tiết thiết bị
       parameters:
         - in: path
           name: deviceId
           required: true
-          description: ID of the device to retrieve
+          description: ID của thiết bị cần lấy
           schema:
             type: string
       responses:
-        '200':
-          description: Success to get a device
+        "200":
+          description: Thành công để lấy một thiết bị
           content:
             application/json:
               schema:
@@ -516,11 +472,11 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get a device
+                    example: Thành công để lấy một thiết bị
                   data:
-                    $ref: '#/components/schemas/Device'
-        '404':
-          description: Get a device that doesn't exist in database.
+                    $ref: "#/components/schemas/Device"
+        "404":
+          description: Lấy một thiết bị không tồn tại trong cơ sở dữ liệu.
           content:
             application/json:
               schema:
@@ -531,16 +487,16 @@ paths:
                     example: 404
                   message:
                     type: string
-                    example: No device found.
+                    example: Không tìm thấy thiết bị.
   /device/update:
     put:
       tags:
         - device
-      summary: Update an existing device
-      description: Update an existing device. If **_successfully_**, **the response.data will return the affected record.**
+      summary: Cập nhật thiết bị
+      description: Cập nhật một thiết bị đã tồn tại. Nếu **_thành công_**, **response.data sẽ trả về bản ghi bị ảnh hưởng.**
       requestBody:
         required: true
-        description: Update an existing device
+        description: Cập nhật một thiết bị đã tồn tại
         content:
           application/json:
             schema:
@@ -548,16 +504,16 @@ paths:
               properties:
                 deviceId:
                   type: string
-                  example: 'D1'
+                  example: "D1"
                 name:
                   type: string
-                  example: 'Fan'
+                  example: "Quạt"
                 description:
                   type: string
-                  example: 'Quạt'
+                  example: "Quạt điện"
       responses:
-        '200':
-          description: Succeed to update sensor
+        "200":
+          description: Thành công để cập nhật thiết bị
           content:
             application/json:
               schema:
@@ -568,11 +524,11 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Success to update sensor
+                    example: Thành công để cập nhật thiết bị
                   data:
-                    $ref: '#/components/schemas/Device'
-        '404':
-          description: Update a device that doesn't exist.
+                    $ref: "#/components/schemas/Device"
+        "404":
+          description: Cập nhật một thiết bị không tồn tại.
           content:
             application/json:
               schema:
@@ -583,16 +539,16 @@ paths:
                     example: 404
                   message:
                     type: string
-                    example: No device found.
+                    example: Không tìm thấy thiết bị.
   /device/update-status:
     put:
       tags:
         - device
-      summary: Update a device status
-      description: Update the status of existing device. If **_successfully_**, **the response.data will return the affected record.**. The `_save` property will be a boolean value (**true, false**). If **true**, the status will be save to the database. See the responses below.
+      summary: Thay đổi trạng thái thiết bị
+      description: Cập nhật trạng thái của thiết bị hiện có. Nếu **_thành công_**, **response.data sẽ trả về bản ghi bị ảnh hưởng.**. Thuộc tính `_save` sẽ là một giá trị boolean (**true, false**). Nếu **true**, trạng thái sẽ được lưu vào cơ sở dữ liệu. Xem các phản hồi bên dưới.
       requestBody:
         required: true
-        description: Update a device status
+        description: Cập nhật trạng thái thiết bị
         content:
           application/json:
             schema:
@@ -600,20 +556,20 @@ paths:
               properties:
                 deviceId:
                   type: string
-                  example: 'D1'
+                  example: "D1"
                 action:
                   type: string
                   enum:
-                    - 'ON'
-                    - 'OFF'
+                    - "BẬT"
+                    - "TẮT"
                 _save:
                   type: boolean
                   enum:
                     - true
                     - false
       responses:
-        '201':
-          description: Succeed to update device status
+        "201":
+          description: Thành công để cập nhật trạng thái thiết bị
           content:
             application/json:
               schema:
@@ -624,11 +580,11 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Success to update sensor
+                    example: Thành công để cập nhật trạng thái thiết bị
                   data:
-                    $ref: '#/components/schemas/DataAction'
-        '200':
-          description: Succeed to update device status but NOT SAVE
+                    $ref: "#/components/schemas/DataAction"
+        "200":
+          description: Thành công để cập nhật trạng thái thiết bị nhưng KHÔNG LƯU
           content:
             application/json:
               schema:
@@ -639,12 +595,12 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to update device status but NOT SAVE
+                    example: Thành công để cập nhật trạng thái thiết bị nhưng KHÔNG LƯU
                   data:
                     type: object
                     example: {}
-        '404':
-          description: Update device status while the device does not exist.
+        "404":
+          description: Cập nhật trạng thái thiết bị trong khi thiết bị không tồn tại.
           content:
             application/json:
               schema:
@@ -655,9 +611,9 @@ paths:
                     example: 404
                   message:
                     type: string
-                    example: No device found.
-        '500':
-          description: Update device status while `_save = true` but **MQTT** is <mark>disconnected</mark>.
+                    example: Không tìm thấy thiết bị.
+        "500":
+          description: Cập nhật trạng thái thiết bị trong khi `_save = true` nhưng **MQTT** bị <mark>ngắt kết nối</mark>.
           content:
             application/json:
               schema:
@@ -668,50 +624,50 @@ paths:
                     example: 500
                   message:
                     type: string
-                    example: You cannot save the data when MQTT is currently connected.
+                    example: Bạn không thể lưu dữ liệu khi MQTT đang kết nối.
   /device/action:
     get:
       tags:
         - device
-      summary: Get data action.
-      description: Get data action by **multiple criteria**.
+      summary: Lấy dữ liệu hành động.
+      description: Lấy dữ liệu hành động theo **nhiều tiêu chí**.
       parameters:
         - name: sensorId
           in: query
           required: false
-          description: The ID of the device to retrieve data for. If provided, the endpoint will return data for the device with this ID. If not provided, the endpoint will return data for all sensors.
+          description: ID của thiết bị để lấy dữ liệu. Nếu được cung cấp, điểm cuối sẽ trả về dữ liệu cho thiết bị có ID này. Nếu không được cung cấp, điểm cuối sẽ trả về dữ liệu cho tất cả các cảm biến.
           schema:
             type: string
-            example: 'D1'
+            example: "D1"
         - name: action
           in: query
           required: false
-          description: The action of the data action to retrieve.
+          description: Hành động của thiết bị.
           schema:
             type: string
             enum:
-              - 'ON'
-              - 'OFF'
+              - "BẬT"
+              - "TẮT"
         - name: startDate
           in: query
           required: false
-          description: The start date/time for the data range. If provided, the endpoint will return data recorded after this date/time.
+          description: Ngày/giờ bắt đầu của dải dữ liệu.
           schema:
             type: string
             format: date-time
-            example: '2024-03-16 00:00:00'
+            example: "2024-03-16 00:00:00"
         - name: endDate
           in: query
           required: false
-          description: The end date/time for the data range. If provided, the endpoint will return data recorded before this date/time.
+          description: Ngày/giờ kết thúc của dải dữ liệu.
           schema:
             type: string
             format: date-time
-            example: '2024-03-17 00:00:00'
+            example: "2024-03-17 00:00:00"
         - name: orderBy
           in: query
           required: false
-          description: The field to sort the results by.
+          description: Trường để sắp xếp kết quả.
           schema:
             type: string
             enum:
@@ -719,7 +675,7 @@ paths:
         - name: direction
           in: query
           required: false
-          description: The direction of the sorting (ASC or DESC).
+          description: Hướng sắp xếp (ASC hoặc DESC).
           schema:
             type: string
             enum:
@@ -728,7 +684,7 @@ paths:
         - name: page
           in: query
           required: false
-          description: The page number of the results.
+          description: Số trang của kết quả.
           schema:
             type: integer
             minimum: 1
@@ -736,14 +692,14 @@ paths:
         - name: pageSize
           in: query
           required: false
-          description: The number of results per page.
+          description: Số lượng kết quả trên mỗi trang.
           schema:
             type: integer
             minimum: 1
             default: 10
       responses:
-        '200':
-          description: Succeed to get data sensor. The response.data will be <mark>empty array</mark> if there isn't any records matching with all provided criteria.
+        "200":
+          description: Lấy dữ liệu hành động thành công. response.data sẽ là một mảng trống nếu không có bản ghi nào khớp với tất cả các tiêu chí được cung cấp.
           content:
             application/json:
               schema:
@@ -754,11 +710,12 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get data sensor
+                    example: Lấy dữ liệu hành động thành công
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/DataAction'
+                      $ref: "#/components/schemas/DataAction"
+                    example: []
                   meta:
                     type: object
                     properties:
@@ -767,49 +724,49 @@ paths:
                         properties:
                           count:
                             type: integer
-                            description: Quantity of records on current page.
-                            example: 1
+                            description: Số lượng bản ghi trên trang hiện tại.
+                            example: 0
                           total:
                             type: integer
-                            description: Quantity of all records.
-                            example: 8
+                            description: Số lượng tất cả các bản ghi.
+                            example: 0
                           pageSize:
                             type: integer
-                            description: Quantity of records in request.
-                            example: 1
+                            description: Số lượng bản ghi trong yêu cầu.
+                            example: 10
                           currentPage:
                             type: integer
-                            description: The number of current page.
+                            description: Số trang hiện tại.
                             example: 1
                           totalPage:
                             type: integer
-                            description: Total number of pages.
-                            example: 8
+                            description: Tổng số trang.
+                            example: 0
                           hasNext:
                             type: boolean
-                            description: Whether it is possible to forward pages or not.
-                            example: true
+                            description: Có thể chuyển tiếp trang hay không.
+                            example: false
                           hasPrevious:
                             type: boolean
-                            description: Whether it is possible to return to the previous page or not
+                            description: Có thể quay lại trang trước đó hay không.
                             example: false
   /device/action/delete:
     delete:
       tags:
         - device
-      summary: Delete data action.
-      description: Delete data action..
+      summary: Xoá dữ liệu hành động
+      description: Xoá dữ liệu hành động theo **nhiều tiêu chí**.
       parameters:
-        - name: dataId
+        - name: actionId
           in: query
           required: true
-          description: The ID of the data to delete. The `dataId` are <mark>separated by **commas**, written next to each other without spaces</mark>
+          description: ID của dữ liệu hành động để xoá. Các `actionId` được phân tách bằng dấu phẩy, viết kế tiếp nhau mà không có khoảng trắng.
           schema:
             type: string
-            example: '1,3,4,5'
+            example: "1,2,3,4,5"
       responses:
-        '200':
-          description: Succeed to delete data action. The `response.data` will be the **number** of removed records from database.
+        "200":
+          description: Xoá dữ liệu hành động thành công. `response.data` sẽ là **số** bản ghi đã xoá khỏi cơ sở dữ liệu.
           content:
             application/json:
               schema:
@@ -820,7 +777,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Succeed to get data sensor
+                    example: Lấy dữ liệu hành động thành công
                   data:
                     type: integer
                     example: 1
@@ -830,96 +787,64 @@ components:
       type: object
       properties:
         id:
+          type: integer
+          example: 1
+        sensorId:
           type: string
-          example: 'S1'
+          example: "S1"
         name:
           type: string
-          example: 'Sensor'
+          example: "Cảm biến nhiệt độ"
         address:
           type: string
-          example: 'localhost'
+          example: "localhost"
         createdAt:
           type: string
           format: date-time
-          example: '2024-03-16 10:00:57'
+          example: "2024-03-16 00:11:23"
         updatedAt:
           type: string
           format: date-time
-          example: '2024-03-16 10:00:57'
-      xml:
-        name: sensor
+          example: "2024-03-16 00:11:23"
     Device:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 'D1'
-        name:
-          type: string
-          example: 'Fan'
-        description:
-          type: string
-          example: 'Quạt'
-        createdAt:
-          type: string
-          format: date-time
-          example: '2024-03-16 09:59:30'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2024-03-16 09:59:30'
-      xml:
-        name: device
-    DataSensor:
       type: object
       properties:
         id:
           type: integer
           example: 1
-        temperature:
-          type: number
-          format: double
-          example: 25.22
-        humidity:
-          type: number
-          format: double
-          example: 80.30
-        brightness:
-          type: integer
-          example: 972
+        deviceId:
+          type: string
+          example: "D1"
+        name:
+          type: string
+          example: "Quạt điện"
+        description:
+          type: string
+          example: "Quạt điện thông minh"
         createdAt:
           type: string
           format: date-time
-          example: '2024-03-16 09:59:30'
+          example: "2024-03-16 00:11:23"
         updatedAt:
           type: string
           format: date-time
-          example: '2024-03-16 09:59:30'
-      xml:
-        name: dataSensor
+          example: "2024-03-16 00:11:23"
     DataAction:
       type: object
       properties:
         id:
           type: integer
           example: 1
+        deviceId:
+          type: string
+          example: "D1"
         action:
           type: string
-          description: Device action status
-          example: 'ON'
           enum:
-            - 'ON'
-            - 'OFF'
+            - "BẬT"
+            - "TẮT"
+          example: "BẬT"
         createdAt:
           type: string
           format: date-time
-          example: '2024-03-16 09:59:30'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2024-03-16 09:59:30'
-        deviceId:
-          type: string
-          example: 'D1'
-      xml:
-        name: dataAction
+          example: "2024-03-16 00:11:23"
