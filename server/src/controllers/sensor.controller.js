@@ -103,13 +103,14 @@ sensorController.getDataSensor = async (req, res, next) => {
     startDate,
     endDate,
     orderBy,
-    direction,
-    page,
+    sortOrder,
+    pageNumber,
     pageSize,
     searchField,
     searchValue,
     searchOperator, // equal, greater, less, inRange
   } = req.query;
+  
   try {
     if (searchValue) {
       searchValue = searchValue?.split(',').map((value) => +value);
@@ -119,13 +120,15 @@ sensorController.getDataSensor = async (req, res, next) => {
       startDate,
       endDate,
       orderBy,
-      direction,
-      page: +page,
+      sortOrder,
+      pageNumber: +pageNumber,
       pageSize: +pageSize,
       searchField,
       searchValue: searchValue,
       searchOperator,
     };
+    
+    console.log(payload)
     response = await sensorServices.fetchSensorDataByCriteria(payload);
     res.status(200).json(response);
   } catch (error) {

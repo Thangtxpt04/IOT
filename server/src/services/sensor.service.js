@@ -185,16 +185,16 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
           whereCondition[field] = {
             [Op.lte]: value[0],
           };
-        } else if (operator === 'inRange') {
+        } else if (operator === 'valueRange') {
           whereCondition[field] = {
             [Op.between]: value,
           };
         }
       }
       // ORDER CONDITION
-      if (searchCriteria.orderBy && searchCriteria.direction) {
-        const direction = searchCriteria.direction.toString().toUpperCase();
-        orderCondition.push([`${searchCriteria.orderBy}`, `${direction}`]);
+      if (searchCriteria.orderBy && searchCriteria.sortOrder) {
+        const sortOrder = searchCriteria.sortOrder.toString().toUpperCase();
+        orderCondition.push([`${searchCriteria.orderBy}`, `${sortOrder}`]);
       }
       if (Object.keys(whereCondition).length !== 0)
         condition.where = whereCondition;
@@ -204,11 +204,11 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
       const totalData = await DataSensorModel.count(condition);
       // console.log('totalData', totalData);
       // Pagination
-      let { page, pageSize } = searchCriteria;
-      if (!page) page = 1;
+      let { pageNumber, pageSize } = searchCriteria;
+      if (!pageNumber) pageNumber = 1;
       if (!pageSize) pageSize = 10;
       condition.limit = pageSize;
-      condition.offset = (page - 1) * pageSize;
+      condition.offset = (pageNumber - 1) * pageSize;
       // Query
       // console.log('conditionB', condition);
       const dataSensor = await DataSensorModel.findAll(condition);
@@ -218,10 +218,10 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
         count: dataSensor.length,
         total: totalData,
         pageSize,
-        currentPage: page,
+        currentPage: pageNumber,
         totalPage: Math.ceil(totalData / pageSize),
-        hasNext: page * pageSize < totalData,
-        hasPrevious: page > 1,
+        hasNext: pageNumber * pageSize < totalData,
+        hasPrevious: pageNumber > 1,
       };
     }
   } catch (error) {
