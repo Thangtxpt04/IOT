@@ -8,9 +8,9 @@ import {
 } from "../../datatablesource";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Button } from "antd";
 
 const Datatable = ({ dataTable }) => {
-  console.log(dataTable);
   const [data, setData] = useState(dataHistoryRows);
 
   const [columns, setColumns] = useState(dataHistoryColumns);

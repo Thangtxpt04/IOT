@@ -12,8 +12,6 @@ import Profile from "./components/Profile/Profile";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-  const isDataSensor = "isDataSensor";
-  const isHistoryAction = "isHistoryAction";
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
@@ -23,7 +21,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="data-sensor">
-              <Route index element={<List data={isDataSensor} />} />
+              <Route index element={<List name="data-sensor" />} />
               <Route path=":userId" element={<Single />} />
               <Route
                 path="new"
@@ -31,7 +29,7 @@ function App() {
               />
             </Route>
             <Route path="action-history">
-              <Route index element={<List data={isHistoryAction} />} />
+              <Route index element={<List name="action-history" />} />
               <Route path=":userId" element={<Single />} />
               <Route
                 path="new"

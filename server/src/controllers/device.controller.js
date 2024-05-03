@@ -91,8 +91,8 @@ deviceController.getDataAction = async (req, res, next) => {
     startDate,
     endDate,
     orderBy,
-    direction,
-    page,
+    sortOrder,
+    pageNumber,
     pageSize,
     action,
   } = req.query;
@@ -102,9 +102,9 @@ deviceController.getDataAction = async (req, res, next) => {
       startDate,
       endDate,
       orderBy,
-      direction,
+      sortOrder,
       action,
-      page: +page,
+      pageNumber: +pageNumber,
       pageSize: +pageSize,
     };
     response = await deviceServices.fetchDataActionByCriteria(payload);

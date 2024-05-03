@@ -5,6 +5,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import deviceServices from "../../services/deviceServices";
+import SwitchButton from "../SwitchButton";
+
+import { message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFan, faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import "./featured.scss";
@@ -62,11 +66,73 @@ const IOSSwitch = styled((props) => (
 
 export default function CustomizedSwitches() {
   const [isFanOn, setIsFan] = React.useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
   let fanRef = React.useRef();
 
   const [isActiveLight, setIsActiveLight] = React.useState(false);
 
   const spinAnimation = React.useRef(null);
+
+  const handleFanClick = React.useCallback(
+    ({ mode, _save, allowNotify }) => {
+      const data = {
+        deviceId: "1",
+        action: mode,
+        _save,
+      };
+      messageApi.loading(`Waiting...`, [0.5]);
+      deviceServices
+        .updateDeviceStatus({ data, allowLog: allowNotify })
+        .then((response) => {
+          console.log("response", response);
+          if (allowNotify)
+            messageApi.success(
+              `Succeed to ${!mode ? "TURN OFF" : "TURN ON"} THE FAN`
+            );
+          setIsFan(mode);
+        })
+        .catch((error) => {
+          console.log("Error", error.data);
+          if (allowNotify)
+            messageApi.error(
+              `Failed to ${!mode ? "TURN OFF" : "TURN ON"} THE FAN`
+            );
+          setIsFan(!mode);
+        });
+    },
+    [messageApi]
+  );
+
+  const handleLightClick = React.useCallback(
+    ({ mode, _save, allowNotify }) => {
+      // console.log('Save', _save);
+      const data = {
+        deviceId: "2",
+        action: mode,
+        _save,
+      };
+      deviceServices
+        .updateDeviceStatus({ data, allowLog: allowNotify })
+        .then((response) => {
+          console.log("response", response);
+          if (allowNotify)
+            messageApi.success(
+              `Succeed to ${!mode ? "TURN OFF" : "TURN ON"} THE LIGHT`
+            );
+          setIsActiveLight(mode);
+        })
+        .catch((error) => {
+          console.log("Error", error.data);
+          if (allowNotify)
+            messageApi.error(
+              `Failed to ${!mode ? "TURN OFF" : "TURN ON"} THE LIGHT`
+            );
+          setIsActiveLight(!mode);
+        });
+    },
+    [messageApi]
+  );
 
   React.useEffect(() => {
     spinAnimation.current = fanRef.current.animate(
@@ -87,6 +153,49 @@ export default function CustomizedSwitches() {
   };
 
   React.useEffect(() => {
+    const lightParams = {
+      deviceId: "2",
+      orderBy: "createdAt",
+      sortOrder: "DESC",
+      pageNumber: 1,
+      pageSize: 1,
+    };
+    const fanParams = {
+      deviceId: "1",
+      orderBy: "createdAt",
+      sortOrder: "DESC",
+      pageNumber: 1,
+      pageSize: 1,
+    };
+    const getLatestFanStatus = deviceServices.getDataAction({
+      params: fanParams,
+    });
+    const getLatestLightStatus = deviceServices.getDataAction({
+      params: lightParams,
+    });
+    Promise.all([getLatestFanStatus, getLatestLightStatus])
+      .then(([fanResponse, lightResponse]) => {
+        // console.log(fanResponse, lightResponse);
+        if (fanResponse?.data?.length > 0) {
+          handleFanClick({
+            mode: fanResponse.data[0].action === "ON" ? true : false,
+            _save: false,
+          });
+        }
+        if (lightResponse?.data?.length > 0) {
+          handleLightClick({
+            mode: lightResponse.data[0].action === "ON" ? true : false,
+            _save: false,
+          });
+        }
+      })
+      .catch((error) => {
+        messageApi.error("Failed to get latest device status!");
+        console.log("Error when getting latest device status");
+      });
+  }, [messageApi, handleFanClick, handleLightClick]);
+
+  React.useEffect(() => {
     isFanOn ? spinAnimation.current.play() : spinAnimation.current.pause();
   }, [isFanOn]);
   React.useEffect(() => {
@@ -99,10 +208,10 @@ export default function CustomizedSwitches() {
         <div>
           <FontAwesomeIcon icon={faFan} className="device" ref={fanRef} />
           <dir>
-            <FormControlLabel
-              control={<IOSSwitch sx={{ m: 1 }} />}
-              label={`${isFanOn ? "ON" : "OFF"}`}
-              onClick={onHandleFan}
+            <SwitchButton
+              title={"Change the Fan mode"}
+              mode={isFanOn}
+              onClick={handleFanClick}
             />
           </dir>
         </div>
@@ -111,13 +220,15 @@ export default function CustomizedSwitches() {
             icon={faLightbulb}
             className={`device ${isActiveLight ? "active" : ""}`}
           />
-          <dir>
-            <FormControlLabel
-              onClick={() => setIsActiveLight(!isActiveLight)}
-              control={<IOSSwitch sx={{ m: 1 }} />}
-              label={`${isActiveLight ? "ON" : "OFF"}`}
-            />
-          </dir>
+          <div>
+            <div>
+              <SwitchButton
+                title={"Change the Light mode"}
+                mode={isActiveLight}
+                onClick={handleLightClick}
+              />
+            </div>
+          </div>
         </div>
       </FormGroup>
     </div>

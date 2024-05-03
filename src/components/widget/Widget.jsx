@@ -18,9 +18,11 @@ const getColorGradient = (parameter, color1, color2) => {
   const b = Math.floor(color1[2] + percent * (color2[2] - color1[2]));
   return `rgb(${r},${g},${b})`;
 };
-const Widget = ({ type }) => {
+const Widget = ({ type, socketClient }) => {
   let data;
-
+  const [temperature, setTemperature] = useState(99);
+  const [humidity, setMoisture] = useState(99);
+  const [brightness, setBrightness] = useState(999);
   //temporary
   const amount = 37;
   const [randomNumber, setRandomNumber] = useState(getRandomNumber);
@@ -39,15 +41,30 @@ const Widget = ({ type }) => {
     // Xóa interval khi component bị unmount
     return () => clearInterval(intervalId);
   }, []); // [] đ
+
+  useEffect(() => {
+    // const socket = socketIOClient(ENDPOINT, { transports: ['websocket', 'polling', 'flashsocket'] });
+    socketClient?.on("sensorData", (data) => {
+      // console.log('Widget', data);
+      const sensorData = JSON.parse(data);
+      console.log(sensorData);
+      setTemperature(+sensorData?.temperature);
+      setMoisture(+sensorData?.humidity);
+      setBrightness(+sensorData?.brightness);
+    });
+    return () => {
+      socketClient?.disconnect();
+    };
+  }, [socketClient]);
   switch (type) {
     case "temperature":
       data = {
-        parameter: randomNumber,
+        parameter: temperature,
         title: "Nhiệt độ",
         keyName: "temperature",
         link: "See all users",
         background: `#FFE53B linear-gradient(147deg, #FFE53B ${
-          50 - randomNumber
+          50 - temperature
         }%, #FF2525 74%)`,
 
         icon: (
@@ -63,17 +80,13 @@ const Widget = ({ type }) => {
       break;
     case "humidity":
       data = {
-        parameter: randomNumber,
+        parameter: humidity,
         title: "Độ ẩm",
         keyName: "humidity",
 
         background: `#0093E9 linear-gradient(160deg, #0093E9 ${randomNumber}%, #80D0C7 80%)`,
 
-        backgroundColor: getColorGradient(
-          randomNumber,
-          [0, 128, 0],
-          [0, 255, 0]
-        ),
+        backgroundColor: getColorGradient(humidity, [0, 128, 0], [0, 255, 0]),
         icon: (
           <WaterDropIcon
             className="icon"
@@ -89,12 +102,12 @@ const Widget = ({ type }) => {
       break;
     case "lux":
       data = {
-        parameter: randomNumber,
+        parameter: brightness,
         title: "Ánh sáng",
         keyName: "lux",
         link: "View net earnings",
 
-        background: ` linear-gradient( 135deg, #FDEB71 ${randomNumber}%, #F8D800 100%)`,
+        background: ` linear-gradient( 135deg, #FDEB71 ${brightness}%, #F8D800 100%)`,
 
         icon: (
           <LightModeIcon
