@@ -204,11 +204,11 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
       const totalData = await DataSensorModel.count(condition);
       // console.log('totalData', totalData);
       // Pagination
-      let { pageNumber, pageSize } = searchCriteria;
-      if (!pageNumber) pageNumber = 1;
+      let { page, pageSize } = searchCriteria;
+      if (!page) page = 1;
       if (!pageSize) pageSize = 10;
       condition.limit = pageSize;
-      condition.offset = (pageNumber - 1) * pageSize;
+      condition.offset = (page - 1) * pageSize;
       // Query
       // console.log('conditionB', condition);
       const dataSensor = await DataSensorModel.findAll(condition);
@@ -218,10 +218,10 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
         count: dataSensor.length,
         total: totalData,
         pageSize,
-        currentPage: pageNumber,
+        currentPage: page,
         totalPage: Math.ceil(totalData / pageSize),
-        hasNext: pageNumber * pageSize < totalData,
-        hasPrevious: pageNumber > 1,
+        hasNext: page * pageSize < totalData,
+        hasPrevious: page > 1,
       };
     }
   } catch (error) {

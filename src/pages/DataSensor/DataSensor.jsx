@@ -275,6 +275,10 @@ function DataSensor() {
                     value: "4",
                     label: "Ngày tạo",
                   },
+                  {
+                    label: "Tất cả",
+                    value: "all",
+                  },
                 ]}
                 onChange={(value) =>
                   setFilters((prev) => ({ ...prev, searchField: value }))

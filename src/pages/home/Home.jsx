@@ -34,7 +34,7 @@ const Home = () => {
         </div>
         <div className="charts">
           <div className="chart">
-            <Chart />
+            <Chart socketClient={socket} />
           </div>
           <div className="devide">
             <Featured />

@@ -8,7 +8,7 @@ const saveSensorData = async (data) => {
   let response;
   let { temperatureC, humidity, brightness, sensorId } = data;
   try {
-    if (!sensorId) sensorId = "S1";
+    if (!sensorId) sensorId = "1";
     const payload = {
       sensorId,
       temperature: temperatureC,
@@ -121,7 +121,7 @@ sensorController.getDataSensor = async (req, res, next) => {
       endDate,
       orderBy,
       sortOrder,
-      pageNumber: +pageNumber,
+      page: +pageNumber,
       pageSize: +pageSize,
       searchField,
       searchValue: searchValue,
@@ -160,29 +160,29 @@ io.on("connection", (socket) => {
   console.log("Client is connected");
 
   _socket = socket;
-  const sendMessage = setInterval(() => {
-    io.emit(
-      "sensorData",
-      JSON.stringify({
-        temperature: (Math.random() * 100 + 1).toFixed(2),
-        humidity: (Math.random() * 100 + 1).toFixed(2),
-        brightness: (Math.random() * 1023 + 1).toFixed(2),
-        createdAt: new Date().toISOString(),
-      })
-    );
-  }, 5000);
+  // const sendMessage = setInterval(() => {
+  //   io.emit(
+  //     "sensorData",
+  //     JSON.stringify({
+  //       temperature: (Math.random() * 100 + 1).toFixed(2),
+  //       humidity: (Math.random() * 100 + 1).toFixed(2),
+  //       brightness: (Math.random() * 1023 + 1).toFixed(2),
+  //       createdAt: new Date().toISOString(),
+  //     })
+  //   );
+  // }, 5000);
 
   socket.on("disconnect", () => {
     console.log("Client is disconnected");
-    clearInterval(sendMessage);
+    // clearInterval(sendMessage);
   });
 });
 
 mqttClient.on("message", function (topic, message) {
   if (mqttClient.connected) {
     const messageObj = JSON.parse(message);
-    console.log(`Received message from [${topic}]:`, messageObj);
-    if (topic === "sensor/dht11") {
+    console.log(`Received messages from [${topic}]:`, messageObj);
+    if (topic === "sensor") {
       saveSensorData(messageObj)
         .then((response) => {
           console.log(response);

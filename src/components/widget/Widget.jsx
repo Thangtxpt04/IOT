@@ -45,7 +45,7 @@ const Widget = ({ type, socketClient }) => {
   useEffect(() => {
     // const socket = socketIOClient(ENDPOINT, { transports: ['websocket', 'polling', 'flashsocket'] });
     socketClient?.on("sensorData", (data) => {
-      // console.log('Widget', data);
+      console.log("Widget", data);
       const sensorData = JSON.parse(data);
       console.log(sensorData);
       setTemperature(+sensorData?.temperature);

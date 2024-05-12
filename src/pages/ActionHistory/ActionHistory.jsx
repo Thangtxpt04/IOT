@@ -41,9 +41,10 @@ const columns: any[] = [
     dataIndex: "createdAt",
   },
   {
-    key: "deviceId",
-    title: "DeviceID",
-    dataIndex: "deviceId",
+    key: "device",
+    title: "Device Name",
+    dataIndex: "device",
+    render: (_, { device }) => <>{<p>{device.name}</p>}</>,
   },
 ];
 
@@ -134,6 +135,15 @@ function ActionHistory() {
     setFilters((prev) => ({
       ...prev,
       pageNumber: event,
+    }));
+    console.log(event);
+  };
+
+  const onShowSizeChange = (current, pageSize) => {
+    setFilters((prev) => ({
+      ...prev,
+      pageNumber: current,
+      pageSize: pageSize,
     }));
   };
   return (
@@ -347,6 +357,7 @@ function ActionHistory() {
           defaultCurrent={pagination.currentPage}
           total={pagination.total}
           onChange={onHandleChangePagination}
+          onShowSizeChange={onShowSizeChange}
         />
       </div>
     </div>

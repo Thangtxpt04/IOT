@@ -186,8 +186,14 @@ deviceServices.fetchDataActionByCriteria = async (payload) => {
       condition.limit = pageSize;
       condition.offset = (pageNumber - 1) * pageSize;
       // Query
-      const dataAction = await DataActionModel.findAll(condition);
+      // const dataAction = await DataActionModel.findAll(condition);
 
+      let dataAction = null;
+
+      dataAction = await DataActionModel.findAll({
+        ...condition,
+        include: DeviceModel,
+      });
       response.data = dataAction;
       response.meta.pagination = {
         count: dataAction.length,

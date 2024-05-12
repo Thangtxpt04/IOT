@@ -35,8 +35,11 @@ app.use((error, req, res, next) => {
 mqttClient.on("connect", () => {
   if (mqttClient.connected === true) {
     // subscribe to a topic
-    subscribeTopic("sensor");
+    subscribeTopic("sensor/dht11");
+    subscribeTopic("sensor/light");
+
     subscribeTopic("device/status");
+    subscribeTopic("sensor");
   }
 });
 

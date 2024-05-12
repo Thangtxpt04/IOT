@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-
+import * as timeHelper from "../../utils/time";
 import "./chart.scss";
 
 ChartJS.register(
@@ -23,31 +23,83 @@ ChartJS.register(
   Legend
 );
 
-function Chart() {
-  const labels = ["10:00:01", "10:00:02", "10:00:03", "10:00:04", "10:00:05"];
-  const data = {
-    labels,
+function Chart({ socketClient }) {
+  const [chartLabel, setChartLabel] = useState([]);
+  const [currentData, setCurrentData] = useState([]);
+  const [chartData, setChartData] = useState({
+    labels: chartLabel,
     datasets: [
       {
-        label: "Nhiệt độ",
-        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        fill: true,
+        label: "Temperature",
+        data:
+          currentData.length > 0
+            ? currentData?.map((dataItem) => dataItem.temperature)
+            : [],
         borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 134, 0.5)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
-        label: "Độ ẩm",
-        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        fill: true,
+        label: "humidity",
+        data:
+          currentData.length > 0
+            ? currentData?.map((dataItem) => dataItem.humidity)
+            : [],
         borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(57, 162, 235, 0.5)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
       {
-        label: "Ánh sáng",
-        data: labels.map(() => Math.ceil(Math.random() * 101)),
+        fill: false,
+        label: "Brightness",
+        data:
+          currentData.length > 0
+            ? currentData?.map((dataItem) => dataItem.brightness)
+            : [],
         borderColor: "rgb(242, 166, 84)",
-        backgroundColor: "rgba(242, 166, 82, 0.5)",
+        backgroundColor: "rgba(242, 166, 84, 0.5)",
       },
     ],
-  };
+  });
+
+  useEffect(() => {
+    const dataset = {
+      labels: chartLabel,
+      datasets: [
+        {
+          fill: true,
+          label: "Temperature",
+          data:
+            currentData.length > 0
+              ? currentData?.map((dataItem) => +dataItem.temperature)
+              : [],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+          fill: true,
+          label: "Moisture",
+          data:
+            currentData.length > 0
+              ? currentData?.map((dataItem) => +dataItem.humidity)
+              : [],
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+        {
+          fill: false,
+          label: "Brightness",
+          data:
+            currentData.length > 0
+              ? currentData?.map((dataItem) => +dataItem.brightness)
+              : [],
+          borderColor: "rgb(242, 166, 84)",
+          backgroundColor: "rgba(242, 166, 84, 0.5)",
+        },
+      ],
+    };
+    setChartData(dataset);
+  }, [chartLabel, currentData]);
   const options = {
     responsive: true,
     plugins: {
@@ -61,9 +113,24 @@ function Chart() {
     },
   };
 
+  useEffect(() => {
+    socketClient?.on("sensorData", (data) => {
+      const sensorData = JSON.parse(data);
+
+      setChartLabel((prev) => [
+        ...prev,
+        timeHelper.formatToCustomFormat(sensorData.createdAt, "hh:mm:ss"),
+      ]);
+      setCurrentData((prev) => {
+        const { createdAt, ...otherData } = sensorData;
+        return [...prev, otherData];
+      });
+    });
+  }, [socketClient]);
+
   return (
     <div className={"wrapper"}>
-      <Line className={"chart"} data={data} />
+      <Line className={"chart"} data={chartData} />
     </div>
   );
 }

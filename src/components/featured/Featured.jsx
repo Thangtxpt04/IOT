@@ -85,7 +85,6 @@ export default function CustomizedSwitches() {
       deviceServices
         .updateDeviceStatus({ data, allowLog: allowNotify })
         .then((response) => {
-          console.log("response", response);
           if (allowNotify)
             messageApi.success(
               `Succeed to ${!mode ? "TURN OFF" : "TURN ON"} THE FAN`
@@ -148,10 +147,6 @@ export default function CustomizedSwitches() {
     );
   }, []);
 
-  const onHandleFan = () => {
-    setIsFan(!isFanOn);
-  };
-
   React.useEffect(() => {
     const lightParams = {
       deviceId: "2",
@@ -198,16 +193,13 @@ export default function CustomizedSwitches() {
   React.useEffect(() => {
     isFanOn ? spinAnimation.current.play() : spinAnimation.current.pause();
   }, [isFanOn]);
-  React.useEffect(() => {
-    console.log(isFanOn);
-    console.log(isActiveLight);
-  }, [isActiveLight, isFanOn]);
+  React.useEffect(() => {}, [isActiveLight, isFanOn]);
   return (
     <div className="featured">
       <FormGroup style={{ display: "flex" }}>
         <div>
           <FontAwesomeIcon icon={faFan} className="device" ref={fanRef} />
-          <dir>
+          <dir style={{ display: "flex", alignItems: "center", marginTop: 20 }}>
             <SwitchButton
               title={"Change the Fan mode"}
               mode={isFanOn}
@@ -220,15 +212,13 @@ export default function CustomizedSwitches() {
             icon={faLightbulb}
             className={`device ${isActiveLight ? "active" : ""}`}
           />
-          <div>
-            <div>
-              <SwitchButton
-                title={"Change the Light mode"}
-                mode={isActiveLight}
-                onClick={handleLightClick}
-              />
-            </div>
-          </div>
+          <dir style={{ display: "flex", alignItems: "center", marginTop: 20 }}>
+            <SwitchButton
+              title={"Change the Light mode"}
+              mode={isActiveLight}
+              onClick={handleLightClick}
+            />
+          </dir>
         </div>
       </FormGroup>
     </div>
