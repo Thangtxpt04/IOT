@@ -196,10 +196,6 @@ function DataSensor() {
                   value: "brightness",
                   label: "Ánh sáng",
                 },
-                {
-                  value: "4",
-                  label: "Ngày tạo",
-                },
               ]}
             />
             <Select
@@ -272,10 +268,6 @@ function DataSensor() {
                     label: "Ánh sáng",
                   },
                   {
-                    value: "4",
-                    label: "Ngày tạo",
-                  },
-                  {
                     label: "Tất cả",
                     value: "all",
                   },
@@ -284,44 +276,46 @@ function DataSensor() {
                   setFilters((prev) => ({ ...prev, searchField: value }))
                 }
               />
-              <Select
-                showSearch
-                allowClear
-                style={{
-                  width: 150,
-                }}
-                placeholder="Chọn điều kiện với giá trị"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "").includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                onChange={(value) =>
-                  setFilters((prev) => ({ ...prev, searchOperator: value }))
-                }
-                options={[
-                  {
-                    value: "greater",
-                    label: "Lớn hơn",
-                  },
-                  {
-                    value: "less",
-                    label: "Nhỏ hơn",
-                  },
-                  {
-                    value: "equal",
-                    label: "Bằng",
-                  },
-                  {
-                    value: "valueRange",
-                    label: "Trong khoảng",
-                  },
-                ]}
-              />
+              {filters.searchField != "all" && (
+                <Select
+                  showSearch
+                  allowClear
+                  style={{
+                    width: 150,
+                  }}
+                  placeholder="Chọn điều kiện với giá trị"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, searchOperator: value }))
+                  }
+                  options={[
+                    {
+                      value: "greater",
+                      label: "Lớn hơn",
+                    },
+                    {
+                      value: "less",
+                      label: "Nhỏ hơn",
+                    },
+                    {
+                      value: "equal",
+                      label: "Bằng",
+                    },
+                    {
+                      value: "valueRange",
+                      label: "Trong khoảng",
+                    },
+                  ]}
+                />
+              )}
               <Space.Compact>
                 <Input
                   style={{ width: "100px" }}

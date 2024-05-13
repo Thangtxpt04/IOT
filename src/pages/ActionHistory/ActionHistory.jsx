@@ -177,6 +177,7 @@ function ActionHistory() {
             </Space>
           </div>
 
+          {/* Lọc theo trạng thái */}
           <div
             style={{
               display: "flex",
@@ -187,6 +188,53 @@ function ActionHistory() {
             <span
               style={{
                 marginRight: "4px",
+              }}
+            >
+              Lọc theo trạng thái:
+            </span>
+            <Select
+              showSearch
+              allowClear
+              style={{
+                width: 200,
+              }}
+              onChange={(value) =>
+                setFilters((prev) => ({ ...prev, action: value }))
+              }
+              placeholder="Chọn"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+              options={[
+                {
+                  value: "ON",
+                  label: "ON",
+                },
+                {
+                  value: "OFF",
+                  label: "OFF",
+                },
+              ]}
+            />
+          </div>
+          <br></br>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <span
+              style={{
+                marginLeft: "4px",
               }}
             >
               Sắp xếp:
@@ -248,100 +296,6 @@ function ActionHistory() {
               }
             />
           </div>
-
-          {/* Search with value */}
-          {/* <div style={{ display: "flex", flexDirection: "row", margin: 12 }}>
-            <span style={{ margin: 8 }}>Tìm kiếm với giá trị:</span>
-            <Space
-              direction="vertical"
-              size={12}
-              style={{ display: "flex", flexDirection: "row" }}
-            >
-              <Select
-                showSearch
-                allowClear
-                style={{
-                  width: 200,
-                }}
-                placeholder="Chọn thuộc tính"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "").includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={[
-                  {
-                    value: "createdAt",
-                    label: "Ngày tạo",
-                  },
-                ]}
-                onChange={(value) =>
-                  setFilters((prev) => ({ ...prev, searchField: value }))
-                }
-              />
-              <Select
-                showSearch
-                allowClear
-                style={{
-                  width: 150,
-                }}
-                placeholder="Chọn điều kiện với giá trị"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "").includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                onChange={(value) =>
-                  setFilters((prev) => ({ ...prev, searchOperator: value }))
-                }
-                options={[
-                  {
-                    value: "greater",
-                    label: "Lớn hơn",
-                  },
-                  {
-                    value: "less",
-                    label: "Nhỏ hơn",
-                  },
-                  {
-                    value: "equal",
-                    label: "Bằng",
-                  },
-                  {
-                    value: "valueRange",
-                    label: "Trong khoảng",
-                  },
-                ]}
-              />
-              <Space.Compact>
-                <Input
-                  style={{ width: "100px" }}
-                  onChange={(value) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      searchValue: value.target.value,
-                    }))
-                  }
-                  placeholder="Nhập giá trị"
-                />
-                {filters.searchOperator == "valueRange" && (
-                  <Input
-                    style={{ width: "100px" }}
-                    placeholder="Nhập giá trị"
-                    onChange={(event) => onHandleFilterValueRange(event)}
-                  />
-                )}
-              </Space.Compact>
-            </Space>
-          </div> */}
         </div>
         <div style={{ justifySelf: "center", alignContent: "center" }}>
           <Button type="primary" size={"middle"}>

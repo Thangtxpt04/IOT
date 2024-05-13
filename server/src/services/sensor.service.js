@@ -167,28 +167,34 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
         };
       }
       // SEARCH CONDITION
-      if (
-        searchCriteria.searchField &&
-        searchCriteria.searchValue &&
-        searchCriteria.searchOperator
-      ) {
-        const field = searchCriteria.searchField;
-        const operator = searchCriteria.searchOperator;
-        const value = searchCriteria.searchValue;
-        if (operator === "equal") {
-          whereCondition[field] = value[0];
-        } else if (operator === "greater") {
-          whereCondition[field] = {
-            [Op.gte]: value[0],
+
+      const field = searchCriteria.searchField;
+      const operator = searchCriteria.searchOperator;
+      const value = searchCriteria.searchValue;
+      if (value) {
+        if (!field || field === "all") {
+          const fieldColumns = ["temperature", "humidity", "brightness"];
+          whereCondition = {
+            ...whereCondition,
+
+            [Op.or]: fieldColumns.map((item) => ({ [item]: value[0] })),
           };
-        } else if (operator === "less") {
-          whereCondition[field] = {
-            [Op.lte]: value[0],
-          };
-        } else if (operator === "valueRange") {
-          whereCondition[field] = {
-            [Op.between]: value,
-          };
+        } else {
+          if (operator === "equal") {
+            whereCondition[field] = value[0];
+          } else if (operator === "greater") {
+            whereCondition[field] = {
+              [Op.gte]: value[0],
+            };
+          } else if (operator === "less") {
+            whereCondition[field] = {
+              [Op.lte]: value[0],
+            };
+          } else if (operator === "valueRange") {
+            whereCondition[field] = {
+              [Op.between]: value,
+            };
+          }
         }
       }
       // ORDER CONDITION
@@ -196,7 +202,10 @@ sensorServices.fetchSensorDataByCriteria = async (payload) => {
         const sortOrder = searchCriteria.sortOrder.toString().toUpperCase();
         orderCondition.push([`${searchCriteria.orderBy}`, `${sortOrder}`]);
       }
-      if (Object.keys(whereCondition).length !== 0)
+      if (
+        Object.keys(whereCondition).length !== 0 ||
+        searchCriteria.searchField === "all"
+      )
         condition.where = whereCondition;
       if (orderCondition.length !== 0) condition.order = orderCondition;
       // Query
