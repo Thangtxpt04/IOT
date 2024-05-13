@@ -75,6 +75,10 @@ deviceController.updateDeviceStatus = async (req, res, next) => {
         publishMessage(`device/light`, {
           action: action ? "ON" : "OFF",
         });
+      } else if (deviceId.includes(["3"])) {
+        publishMessage(`device/heater`, {
+          action: action ? "ON" : "OFF",
+        });
       }
     }
     res.status(201).json(response);

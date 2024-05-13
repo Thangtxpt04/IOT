@@ -244,6 +244,7 @@ function ActionHistory() {
               allowClear
               style={{
                 width: 200,
+                marginLeft: 4,
               }}
               onChange={(value) =>
                 setFilters((prev) => ({ ...prev, orderBy: value }))
@@ -270,6 +271,7 @@ function ActionHistory() {
               allowClear
               style={{
                 width: 120,
+                marginRight: 4,
               }}
               placeholder="Thứ tự"
               optionFilterProp="children"
