@@ -10,7 +10,7 @@ import SwitchButton from "../SwitchButton";
 
 import { message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFan, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { faFan, faLightbulb, faTv } from "@fortawesome/free-solid-svg-icons";
 import "./featured.scss";
 
 const IOSSwitch = styled((props) => (
@@ -71,6 +71,7 @@ export default function CustomizedSwitches() {
   let fanRef = React.useRef();
 
   const [isActiveLight, setIsActiveLight] = React.useState(false);
+  const [isActiveTV, setIsActiveTV] = React.useState(false);
 
   const spinAnimation = React.useRef(null);
 
@@ -132,6 +133,35 @@ export default function CustomizedSwitches() {
     },
     [messageApi]
   );
+  const handleTVClick = React.useCallback(
+    ({ mode, _save, allowNotify }) => {
+      // console.log('Save', _save);
+      const data = {
+        deviceId: "3",
+        action: mode,
+        _save,
+      };
+      deviceServices
+        .updateDeviceStatus({ data, allowLog: allowNotify })
+        .then((response) => {
+          console.log("response", response);
+          if (allowNotify)
+            messageApi.success(
+              `Succeed to ${!mode ? "TURN OFF" : "TURN ON"} THE LIGHT`
+            );
+          setIsActiveTV(mode);
+        })
+        .catch((error) => {
+          console.log("Error", error.data);
+          if (allowNotify)
+            messageApi.error(
+              `Failed to ${!mode ? "TURN OFF" : "TURN ON"} THE LIGHT`
+            );
+          setIsActiveTV(!mode);
+        });
+    },
+    [messageApi]
+  );
 
   React.useEffect(() => {
     spinAnimation.current = fanRef.current.animate(
@@ -162,14 +192,24 @@ export default function CustomizedSwitches() {
       pageNumber: 1,
       pageSize: 1,
     };
+    const TVParams = {
+      deviceId: "3",
+      orderBy: "createdAt",
+      sortOrder: "DESC",
+      pageNumber: 1,
+      pageSize: 1,
+    };
     const getLatestFanStatus = deviceServices.getDataAction({
       params: fanParams,
     });
     const getLatestLightStatus = deviceServices.getDataAction({
       params: lightParams,
     });
-    Promise.all([getLatestFanStatus, getLatestLightStatus])
-      .then(([fanResponse, lightResponse]) => {
+    const getLatestTVStatus = deviceServices.getDataAction({
+      params: TVParams,
+    });
+    Promise.all([getLatestFanStatus, getLatestLightStatus, getLatestTVStatus])
+      .then(([fanResponse, lightResponse, tvResponse]) => {
         // console.log(fanResponse, lightResponse);
         if (fanResponse?.data?.length > 0) {
           handleFanClick({
@@ -183,12 +223,18 @@ export default function CustomizedSwitches() {
             _save: false,
           });
         }
+        if (tvResponse?.data?.length > 0) {
+          handleTVClick({
+            mode: tvResponse.data[0].action === "ON" ? true : false,
+            _save: false,
+          });
+        }
       })
       .catch((error) => {
         messageApi.error("Failed to get latest device status!");
         console.log("Error when getting latest device status");
       });
-  }, [messageApi, handleFanClick, handleLightClick]);
+  }, [messageApi, handleFanClick, handleLightClick, handleTVClick]);
 
   React.useEffect(() => {
     isFanOn ? spinAnimation.current.play() : spinAnimation.current.pause();
@@ -217,6 +263,19 @@ export default function CustomizedSwitches() {
               title={"Change the Light mode"}
               mode={isActiveLight}
               onClick={handleLightClick}
+            />
+          </dir>
+        </div>
+        <div style={{ marginTop: "24px" }}>
+          <FontAwesomeIcon
+            icon={faTv}
+            className={`device ${isActiveTV ? "active" : ""}`}
+          />
+          <dir style={{ display: "flex", alignItems: "center", marginTop: 20 }}>
+            <SwitchButton
+              title={"Change the TV mode"}
+              mode={isActiveTV}
+              onClick={handleTVClick}
             />
           </dir>
         </div>

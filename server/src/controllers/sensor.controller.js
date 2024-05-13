@@ -128,7 +128,6 @@ sensorController.getDataSensor = async (req, res, next) => {
       searchOperator,
     };
 
-    console.log(payload);
     response = await sensorServices.fetchSensorDataByCriteria(payload);
     res.status(200).json(response);
   } catch (error) {
