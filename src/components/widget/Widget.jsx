@@ -23,6 +23,8 @@ const Widget = ({ type, socketClient }) => {
   const [temperature, setTemperature] = useState(99);
   const [humidity, setMoisture] = useState(99);
   const [brightness, setBrightness] = useState(999);
+  const [wind, setWind] = useState(999);
+
   //temporary
   const amount = 37;
   const [randomNumber, setRandomNumber] = useState(getRandomNumber);
@@ -51,6 +53,7 @@ const Widget = ({ type, socketClient }) => {
       setTemperature(+sensorData?.temperature);
       setMoisture(+sensorData?.humidity);
       setBrightness(+sensorData?.brightness);
+      setWind(+sensorData?.wind);
     });
     return () => {
       socketClient?.disconnect();
@@ -120,13 +123,36 @@ const Widget = ({ type, socketClient }) => {
         ),
       };
       break;
+    case "wind":
+      data = {
+        parameter: wind,
+        title: "Gió",
+        keyName: "wind",
+        link: "View net earnings",
+        background: `linear-gradient(135deg, #C8E6C9 ${wind}%, #1B5E20 100%)`, // Gradient từ màu xanh lá cây nhạt đến màu xanh lá cây đậm
+        icon: (
+          <LightModeIcon
+            className="icon"
+            style={{
+              background: "linear-gradient(135deg, #8BC34A 10%, #388E3C 100%)", // mặc định cho icon
+              color: "#8BC34A",
+            }}
+          />
+        ),
+      };
+      break;
     default:
       // Handle default case
       break;
   }
 
   return (
-    <div className={`widget`} style={{ background: `${data.background}` }}>
+    <div
+      className={`widget ${
+        data.parameter > 15 && data?.keyName == "wind" ? "warning" : ""
+      }`}
+      style={{ background: `${data.background}` }}
+    >
       <div className="left">
         <span className="title">{data?.title}</span>
         <span className="counter">

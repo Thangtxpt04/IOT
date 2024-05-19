@@ -3,6 +3,7 @@ const SensorModel = require("../models/Sensor.model");
 const DataSensorModel = require("../models/DataSensor.model");
 const { Op, where } = require("sequelize");
 const dateHelper = require("../utils/date.helper");
+const deviceServices = require("./device.service");
 const sensorServices = {};
 
 sensorServices.createSensor = async (payload) => {
@@ -91,7 +92,9 @@ sensorServices.fetchSensor = async (payload) => {
 };
 
 sensorServices.saveSensorData = async (payload) => {
-  const { sensorId, temperature, humidity, brightness } = payload;
+  const { sensorId, temperature, humidity, brightness, wind } = payload;
+  // Giả lập nhận giá trị wind từ MQTT mỗi 5 giây
+  onWindUpdate(wind);
   const response = {
     statusCode: 201,
     message: "Succeed to save data sensor",
@@ -103,7 +106,9 @@ sensorServices.saveSensorData = async (payload) => {
       temperature: (+temperature).toFixed(2),
       humidity: (+humidity).toFixed(2),
       brightness,
+      wind,
     };
+    console.log("requirments: ", requirements);
     const sensor = await SensorModel.findByPk(sensorId);
     if (sensor) {
       const dataSensor = await sensor.createDataSensor(requirements);
@@ -271,5 +276,43 @@ sensorServices.removeSensorData = async (payload) => {
   }
   return response;
 };
+
+let wind = 0;
+let blinkingInterval = null;
+function updateDeviceStatus(deviceId, action, save) {
+  // Giả sử đây là hàm updateDeviceStatus từ deviceServices
+  deviceServices.updateDeviceStatus({
+    deviceId: deviceId,
+    action: action,
+    _save: save,
+  });
+}
+function startBlinking() {
+  let mode = true;
+  blinkingInterval = setInterval(() => {
+    mode = !mode;
+    publishMessage(`device/fan`, { action: mode ? "ON" : "OFF" });
+  }, 500); // Tốc độ nhấp nháy mỗi 500ms
+}
+
+function stopBlinking() {
+  if (blinkingInterval) {
+    clearInterval(blinkingInterval);
+    blinkingInterval = null;
+    publishMessage(`device/fan`, { action: "OFF" });
+  }
+}
+
+function onWindUpdate(newWindValue) {
+  wind = newWindValue;
+  if (wind > 10) {
+    if (!blinkingInterval) {
+      // Chỉ bắt đầu nhấp nháy nếu chưa có vòng lặp
+      startBlinking();
+    }
+  } else {
+    stopBlinking();
+  }
+}
 
 module.exports = sensorServices;

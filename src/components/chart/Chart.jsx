@@ -59,6 +59,14 @@ function Chart({ socketClient }) {
         borderColor: "rgb(242, 166, 84)",
         backgroundColor: "rgba(242, 166, 84, 0.5)",
       },
+      {
+        fill: false,
+        label: "wind",
+        data:
+          currentData.length > 0
+            ? currentData?.map((dataItem) => dataItem.wind)
+            : [],
+      },
     ],
   });
 
@@ -95,6 +103,14 @@ function Chart({ socketClient }) {
               : [],
           borderColor: "rgb(242, 166, 84)",
           backgroundColor: "rgba(242, 166, 84, 0.5)",
+        },
+        {
+          fill: false,
+          label: "Wind",
+          data:
+            currentData.length > 0
+              ? currentData?.map((dataItem) => +dataItem.wind)
+              : [],
         },
       ],
     };

@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../configs/database');
+const Sequelize = require("sequelize");
+const sequelize = require("../configs/database");
 
 const DataSensor = sequelize.define(
-  'dataSensor',
+  "dataSensor",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -19,6 +19,10 @@ const DataSensor = sequelize.define(
       allowNull: true,
     },
     brightness: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    wind: {
       type: Sequelize.INTEGER,
       allowNull: true,
     },

@@ -6,7 +6,8 @@ const sensorController = {};
 
 const saveSensorData = async (data) => {
   let response;
-  let { temperatureC, humidity, brightness, sensorId } = data;
+  let { temperatureC, humidity, brightness, sensorId, wind } = data;
+
   try {
     if (!sensorId) sensorId = "1";
     const payload = {
@@ -14,6 +15,7 @@ const saveSensorData = async (data) => {
       temperature: temperatureC,
       humidity,
       brightness,
+      wind,
     };
     response = await sensorServices.saveSensorData(payload);
     return response;

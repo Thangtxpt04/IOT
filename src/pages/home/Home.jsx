@@ -31,6 +31,7 @@ const Home = () => {
           <Widget type="temperature" socketClient={socket} />
           <Widget type="humidity" socketClient={socket} />
           <Widget type="lux" socketClient={socket} />
+          <Widget type="wind" socketClient={socket} />
         </div>
         <div className="charts">
           <div className="chart">
